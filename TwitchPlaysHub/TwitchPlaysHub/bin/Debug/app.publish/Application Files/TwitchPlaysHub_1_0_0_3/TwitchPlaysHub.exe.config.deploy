@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <configSections>
+    <sectionGroup name="userSettings" type="System.Configuration.UserSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <section name="TwitchPlaysHub.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+    </sectionGroup>
+  </configSections>
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.7.2" />
+  </startup>
+  <appSettings>
+    <add key="SendKeys" value="SendInput" />
+    <add key="ClientSettingsProvider.ServiceUri" value="" />
+  </appSettings>
+  <userSettings>
+    <TwitchPlaysHub.Properties.Settings>
+      <setting name="CommandList" serializeAs="Xml">
+        <value>
+          <ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </value>
+      </setting>
+      <setting name="TwitchUsername" serializeAs="String">
+        <value />
+      </setting>
+      <setting name="TwitchChannelName" serializeAs="String">
+        <value />
+      </setting>
+      <setting name="TwitchOAuthCode" serializeAs="String">
+        <value />
+      </setting>
+      <setting name="TwitchModList" serializeAs="Xml">
+        <value>
+          <ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </value>
+      </setting>
+      <setting name="TwitchLurkList" serializeAs="Xml">
+        <value>
+          <ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </value>
+      </setting>
+      <setting name="RemindersList" serializeAs="Xml">
+        <value>
+          <ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </value>
+      </setting>
+      <setting name="ReminderActivityTimer" serializeAs="String">
+        <value>600</value>
+      </setting>
+      <setting name="ReconnectActivityTimer" serializeAs="String">
+        <value>600</value>
+      </setting>
+      <setting name="ReconnectDelayTimer" serializeAs="String">
+        <value>5</value>
+      </setting>
+      <setting name="ApptoAppDelay" serializeAs="String">
+        <value>0.015</value>
+      </setting>
+      <setting name="ReconnectCheckBox" serializeAs="String">
+        <value>False</value>
+      </setting>
+      <setting name="EnableLurkingCheckBox" serializeAs="String">
+        <value>True</value>
+      </setting>
+      <setting name="AllowMultipleTriggersCheckBox" serializeAs="String">
+        <value>False</value>
+      </setting>
+      <setting name="AllowOverlapCheckBox" serializeAs="String">
+        <value>False</value>
+      </setting>
+    </TwitchPlaysHub.Properties.Settings>
+  </userSettings>
+  <system.web>
+    <membership defaultProvider="ClientAuthenticationMembershipProvider">
+      <providers>
+        <add name="ClientAuthenticationMembershipProvider" type="System.Web.ClientServices.Providers.ClientFormsAuthenticationMembershipProvider, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" serviceUri="" />
+      </providers>
+    </membership>
+    <roleManager defaultProvider="ClientRoleProvider" enabled="true">
+      <providers>
+        <add name="ClientRoleProvider" type="System.Web.ClientServices.Providers.ClientRoleProvider, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" serviceUri="" cacheTimeout="86400" />
+      </providers>
+    </roleManager>
+  </system.web>
+</configuration>
