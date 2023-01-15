@@ -213,6 +213,8 @@
             this.saveReminderProfileToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.rafflesToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.macrosToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.TwitchChatClientChoice = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.AllowOverlappingTriggers = new System.Windows.Forms.CheckBox();
             this.AllowMultipleTriggersCheckbox = new System.Windows.Forms.CheckBox();
             this.EnableLurkingCheckBox = new System.Windows.Forms.CheckBox();
@@ -282,6 +284,8 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.label6);
+            this.splitContainer1.Panel2.Controls.Add(this.TwitchChatClientChoice);
             this.splitContainer1.Panel2.Controls.Add(this.OAuthCodeButton);
             this.splitContainer1.Panel2.Controls.Add(this.ConnectButton);
             this.splitContainer1.Panel2.Controls.Add(this.SendTwitchMessage);
@@ -1782,7 +1786,7 @@
             // 
             this.ConnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ConnectButton.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ConnectButton.Location = new System.Drawing.Point(3, 100);
+            this.ConnectButton.Location = new System.Drawing.Point(0, 125);
             this.ConnectButton.Name = "ConnectButton";
             this.ConnectButton.Size = new System.Drawing.Size(472, 26);
             this.ConnectButton.TabIndex = 10;
@@ -1870,12 +1874,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TwitchIRCTextbox.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TwitchIRCTextbox.Location = new System.Drawing.Point(3, 130);
+            this.TwitchIRCTextbox.Location = new System.Drawing.Point(3, 153);
             this.TwitchIRCTextbox.Multiline = true;
             this.TwitchIRCTextbox.Name = "TwitchIRCTextbox";
             this.TwitchIRCTextbox.ReadOnly = true;
             this.TwitchIRCTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TwitchIRCTextbox.Size = new System.Drawing.Size(472, 279);
+            this.TwitchIRCTextbox.Size = new System.Drawing.Size(472, 256);
             this.TwitchIRCTextbox.TabIndex = 2;
             // 
             // fileToolStripMenuItem2
@@ -2295,6 +2299,28 @@
             this.macrosToolStripMenuItem3.Text = "Macros";
             this.macrosToolStripMenuItem3.Click += new System.EventHandler(this.macrosToolStripMenuItem_Click);
             // 
+            // TwitchChatClientChoice
+            // 
+            this.TwitchChatClientChoice.FormattingEnabled = true;
+            this.TwitchChatClientChoice.Items.AddRange(new object[] {
+            "IRC",
+            "TwitchLib.Client"});
+            this.TwitchChatClientChoice.Location = new System.Drawing.Point(152, 101);
+            this.TwitchChatClientChoice.Name = "TwitchChatClientChoice";
+            this.TwitchChatClientChoice.Size = new System.Drawing.Size(121, 21);
+            this.TwitchChatClientChoice.TabIndex = 29;
+            this.TwitchChatClientChoice.SelectedIndexChanged += new System.EventHandler(this.TwitchChatClient_SelectedIndexChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(3, 101);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(121, 19);
+            this.label6.TabIndex = 30;
+            this.label6.Text = "Twitch Chat Client";
+            // 
             // AllowOverlappingTriggers
             // 
             this.AllowOverlappingTriggers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -2659,6 +2685,8 @@
         private System.Windows.Forms.ToolStripMenuItem saveReminderProfileToolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem rafflesToolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem macrosToolStripMenuItem3;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox TwitchChatClientChoice;
     }
 }
 
