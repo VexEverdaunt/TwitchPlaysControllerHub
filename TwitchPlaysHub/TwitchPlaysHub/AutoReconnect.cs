@@ -7,14 +7,14 @@ namespace TwitchPlaysHub
     */
     public class AutoReconnect
     {
-        private IrcClient _irc;
+        private ITwitchClient _twitchClient;
         private Thread autoconnect;
         private int sleeptimer;
 
         // Empty constructor makes instance of Thread
-        public AutoReconnect(IrcClient irc, int timer)
+        public AutoReconnect(ITwitchClient twitchClient, int timer)
         {
-            _irc = irc;
+            _twitchClient = twitchClient;
             sleeptimer = timer;
             autoconnect = new Thread(new ThreadStart(this.Run));
         }
@@ -32,10 +32,10 @@ namespace TwitchPlaysHub
             while (true)
             {
                 
-                if (_irc.IsConnected() == false)
+                if (_twitchClient.IsConnected() == false)
                 {
-                    _irc.SendIrcMessage("Reconnecting Connection...");
-                    _irc.AttemptReconnect();
+                    _twitchClient.SendIrcMessage("Reconnecting Connection...");
+                    _twitchClient.AttemptReconnect();
                 }
                 Thread.Sleep(sleeptimer);
             }

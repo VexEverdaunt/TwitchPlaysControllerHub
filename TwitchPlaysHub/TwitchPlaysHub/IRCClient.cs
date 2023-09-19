@@ -5,7 +5,7 @@ using System.IO;
 namespace TwitchPlaysHub
 {
     // Reference: https://www.youtube.com/watch?v=Ss-OzV9aUZg
-    public class IrcClient
+    public class IrcClient : ITwitchClient
     {
         public string userName;
         private string channel;
@@ -129,6 +129,11 @@ namespace TwitchPlaysHub
         public string LastLine()
         {
             return lastLine;
+        }
+
+        public void Disconnect()
+        {
+            // Everything will be closed on destruction
         }
     }
 }

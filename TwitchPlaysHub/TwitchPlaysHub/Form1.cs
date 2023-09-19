@@ -25,7 +25,8 @@ namespace TwitchPlaysHub
 {
     public partial class Form1 : Form
     {
-        IrcClient irc = null;
+        ITwitchClient twitchClient = null;
+        IMessageParser messageParser = null;
         PingSender ping = null;
         //AutoReconnect autoconnect = null;
         Process[] processlist = null;
@@ -100,6 +101,20 @@ namespace TwitchPlaysHub
             {
                 TwitchOAuthTextbox.Text = Properties.Settings.Default.TwitchOAuthCode;
             }
+            if (Properties.Settings.Default.TwitchChatClient != null)
+            {
+                TwitchChatClientChoice.Text = Properties.Settings.Default.TwitchChatClient;
+            }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            if (twitchClient != null)
+            {
+                twitchClient.Disconnect();
+            }
+
+            base.OnClosed(e);
         }
 
         //int Tempint = 0;
@@ -1987,7 +2002,7 @@ namespace TwitchPlaysHub
                                     int maxLength = 500;
                                     for (int index = 0; index < itembreakdown[3].Length; index += maxLength)
                                     {
-                                        irc.SendPublicChatMessage(itembreakdown[3].Substring(index, Math.Min(maxLength, itembreakdown[3].Length - index)));
+                                        twitchClient.SendPublicChatMessage(itembreakdown[3].Substring(index, Math.Min(maxLength, itembreakdown[3].Length - index)));
                                     }
                                     TwitchIRCTextbox.AppendText("REMINDER:" + itembreakdown[3] + Environment.NewLine);
                                     //I'll get around to splitting it up
@@ -1995,7 +2010,7 @@ namespace TwitchPlaysHub
                                 }
                                 else
                                 {
-                                    irc.SendPublicChatMessage(itembreakdown[3]);
+                                    twitchClient.SendPublicChatMessage(itembreakdown[3]);
                                     TwitchIRCTextbox.AppendText("REMINDER:" + itembreakdown[3] + Environment.NewLine);
                                     //irc.SendIrcMessage(itembreakdown[3]);
                                 }
@@ -2258,19 +2273,45 @@ namespace TwitchPlaysHub
             return false;
         }
 
+        public ITwitchClient CreateTwitchClient(string hostname, int port, string username, string oauth, string channel)
+        {
+            string selectedTwitchClient = TwitchChatClientChoice.Items[TwitchChatClientChoice.SelectedIndex].ToString();
+            if (selectedTwitchClient.Equals("TwitchLib.Client"))
+            {
+                return new TwitchLibClient(hostname, port, username, oauth, channel);
+            }
+            else 
+            {
+                return new IrcClient(hostname, port, username, oauth, channel);
+            }
+        }
+
+        public IMessageParser CreateMessageParser()
+        {
+            string selectedTwitchClient = TwitchChatClientChoice.Items[TwitchChatClientChoice.SelectedIndex].ToString();
+            if (selectedTwitchClient.Equals("TwitchLib.Client"))
+            {
+                return new TwitchLibClientMessageParser();
+            } else
+            {
+                return new IrcMessageParser();
+            }
+        }
+
         public void ConnectButton_Click(object sender, EventArgs e)
         {
 
             if (PressedConnect == false)
             {
                 // Initialize and connect to Twitch chat
-                irc = new IrcClient("irc.twitch.tv", 6667,
+                twitchClient = CreateTwitchClient("irc.twitch.tv", 6667,
                 TwitchUsernameTextbox.Text, TwitchOAuthTextbox.Text, TwitchChannelNameTextbox.Text);
+                messageParser = CreateMessageParser();
 
             // Ping to the server to make sure this bot stays connected to the chat
             // Server will respond back to this bot with a PONG (without quotes):
             // Example: ":tmi.twitch.tv PONG tmi.twitch.tv :irc.twitch.tv"
-            ping = new PingSender(irc);
+            ping = new PingSender(twitchClient);
             ping.Start();
                 //autoconnect = new AutoReconnect(irc, Convert.ToInt32(ReconnectTimeBox.Value));
                 //autoconnect.Start();
@@ -2370,10 +2411,11 @@ namespace TwitchPlaysHub
                 //if (irc != null)
                 //{
                     PressedConnect = false;
-                irc.SendIrcMessage("Disconnected from IRC");
-                irc = null; //This also makes the BackgroundWorker Stop.
-                                //BackgroundWorker.CancelAsync();
-                                //BackgroundWorker.DoWork();
+                twitchClient.SendIrcMessage("Disconnected from IRC");
+                twitchClient.Disconnect();
+                twitchClient = null; //This also makes the BackgroundWorker Stop.
+                            //BackgroundWorker.CancelAsync();
+                            //BackgroundWorker.DoWork();
                 
                     ConnectButton.Text = "Connect";
                     timeschatted = 0;
@@ -2410,13 +2452,13 @@ namespace TwitchPlaysHub
                     int maxLength = 500;
                     for (int index = 0; index < remindertext.Length; index += maxLength)
                     {
-                        irc.SendPublicChatMessage(remindertext.Substring(index, Math.Min(maxLength, remindertext.Length - index)));
+                        twitchClient.SendPublicChatMessage(remindertext.Substring(index, Math.Min(maxLength, remindertext.Length - index)));
                     }
                     TwitchIRCTextbox.AppendText("REMINDER:" + remindertext + Environment.NewLine);
                 }
                 else
                 {
-                    irc.SendPublicChatMessage(remindertext);
+                    twitchClient.SendPublicChatMessage(remindertext);
                     TwitchIRCTextbox.AppendText("REMINDER:" + remindertext + Environment.NewLine);
                 }
                 
@@ -2430,13 +2472,13 @@ namespace TwitchPlaysHub
                         int maxLength = 500;
                         for (int index = 0; index < remindertext.Length; index += maxLength)
                         {
-                            irc.SendPublicChatMessage(remindertext.Substring(index, Math.Min(maxLength, remindertext.Length - index)));
+                            twitchClient.SendPublicChatMessage(remindertext.Substring(index, Math.Min(maxLength, remindertext.Length - index)));
                         }
                         TwitchIRCTextbox.AppendText("REMINDER:" + remindertext + Environment.NewLine);
                     }
                     else
                     {
-                        irc.SendPublicChatMessage(remindertext);
+                        twitchClient.SendPublicChatMessage(remindertext);
                         TwitchIRCTextbox.AppendText("REMINDER:" + remindertext + Environment.NewLine);
                     }
                 }
@@ -2452,13 +2494,13 @@ namespace TwitchPlaysHub
                         int maxLength = 500;
                         for (int index = 0; index < remindertext.Length; index += maxLength)
                         {
-                            irc.SendPublicChatMessage(remindertext.Substring(index, Math.Min(maxLength, remindertext.Length - index)));
+                            twitchClient.SendPublicChatMessage(remindertext.Substring(index, Math.Min(maxLength, remindertext.Length - index)));
                         }
                         TwitchIRCTextbox.AppendText("REMINDER:" + remindertext + Environment.NewLine);
                     }
                     else
                     {
-                        irc.SendPublicChatMessage(remindertext);
+                        twitchClient.SendPublicChatMessage(remindertext);
                         TwitchIRCTextbox.AppendText("REMINDER:" + remindertext + Environment.NewLine);
                     }
                 }
@@ -2496,9 +2538,9 @@ namespace TwitchPlaysHub
 
         private void SendTwitchMessage_Click(object sender, EventArgs e)
         {
-            if (irc != null)
+            if (twitchClient != null)
             {
-                irc.SendPublicChatMessage(TwitchMessageText.Text);
+                twitchClient.SendPublicChatMessage(TwitchMessageText.Text);
                 TwitchIRCTextbox.Text = TwitchIRCTextbox.Text + ("YOU SAID: " + TwitchMessageText.Text + Environment.NewLine);
                 TwitchMessageText.Text = "";
             }
@@ -2508,13 +2550,13 @@ namespace TwitchPlaysHub
         {
             CheckForIllegalCrossThreadCalls = false;
 
-            while (irc != null)
+            while (twitchClient != null)
             {
                 //Thread.Sleep(1000);
                 timeschatted += 1;
                 //TwitchIRCTextbox.Text = TwitchIRCTextbox.Text + (timeschatted.ToString() + Environment.NewLine); // Print raw irc messages
 
-                string message = irc.ReadMessage();
+                string message = twitchClient.ReadMessage();
                 if (timeschatted < 11)
                 {
                     TwitchIRCTextbox.Text = TwitchIRCTextbox.Text + (message + Environment.NewLine); // Print raw irc messages
@@ -2522,20 +2564,13 @@ namespace TwitchPlaysHub
 
                 if (message != null)
                 {
+                    //At some point in a stream the message returned 'null' and broke the bot Needs fix, Maybe "try' instead
 
-                    if (message.Contains("PRIVMSG"))
-                    { //At some point in a stream the message returned 'null' and broke the bot Needs fix, Maybe "try' instead
-
-                        // Messages from the users will look something like this (without quotes):
-                        // Format: ":[user]![user]@[user].tmi.twitch.tv PRIVMSG #[channel] :[message]"
-
-                        // Modify message to only retrieve user and message
-                        int intIndexParseSign = message.IndexOf('!');
-                        string userName = message.Substring(1, intIndexParseSign - 1); // parse username from specific section (without quotes)
-                                                                                       // Format: ":[user]!"
-                                                                                       // Get user's message
-                        intIndexParseSign = message.IndexOf(" :");
-                        message = message.Substring(intIndexParseSign + 2);
+                    messageParser.Parse(message);
+                    if (messageParser.IsValid())
+                    {
+                        string userName = messageParser.GetUserName();
+                        message = messageParser.GetChatMessage();
 
                         /* Gives that big block of text of the commands lol
                         if (message.Equals(ShowAllCommandsKeywordTextbox.Text))
@@ -3155,9 +3190,9 @@ namespace TwitchPlaysHub
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                if (irc != null)
+                if (twitchClient != null)
                 {
-                    irc.SendPublicChatMessage(TwitchMessageText.Text);
+                    twitchClient.SendPublicChatMessage(TwitchMessageText.Text);
                     TwitchIRCTextbox.Text = TwitchIRCTextbox.Text + ("YOU SAID: " + TwitchMessageText.Text + Environment.NewLine);
                     TwitchMessageText.Text = "";
                 }
@@ -3469,6 +3504,12 @@ namespace TwitchPlaysHub
         private void AllowOverlappingTriggers_CheckedChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.AllowOverlapCheckBox = AllowOverlappingTriggers.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void TwitchChatClient_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.TwitchChatClient = TwitchChatClientChoice.Items[TwitchChatClientChoice.SelectedIndex].ToString();
             Properties.Settings.Default.Save();
         }
     }
